@@ -44,7 +44,10 @@ void removecomment(char *str)
             str[i]='\0';
             break;
         }
-
+        else if(strstr(str,"printf")!=NULL||strstr(str,"scanf")!=NULL)
+        {
+            str[i]='\0';
+        }
     }
 }
 void removeSpaces(char *str)
@@ -70,10 +73,13 @@ void function_menu(char name[100])
         findvariable(i);
         find_loop(i);
         int f =called(i);
+
         if(countf[f]==1)
         {
+            removeSpaces(function_name[f]);
             function_menu(function_name[f]);
         }
+
     }
 
 
@@ -96,12 +102,16 @@ int called(int name)
 
                 if(strstr(filestring[i],news)!=NULL)
                 {
-                    countf[j]++;
+                    countf[j]=countf[j]+1;
                     f1=1;
                     printf("Call function : %s\n",function_name[j]);
                 }
                 menu[i]=3;
             }
+              if(f1==1)
+              {
+               break;
+              }
         }
 
     if(f1==1)
@@ -113,7 +123,6 @@ int called(int name)
         return 99;
     }
 }
-
 void find_loop(int starting)
 {
      int i=starting;
