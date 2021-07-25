@@ -78,6 +78,19 @@ void function_menu(char name[100])
         {
             removeSpaces(function_name[f]);
             function_menu(function_name[f]);
+            int g =called(i);
+
+            if(countf[g]==1)
+            {
+               removeSpaces(function_name[g]);
+            function_menu(function_name[g]);
+            int gg=called(i);
+            if(countf[gg]==1)
+            {
+                removeSpaces(function_name[gg]);
+            function_menu(function_name[gg]);
+            }
+            }
         }
 
     }
@@ -93,6 +106,14 @@ int called(int name)
         int j=0;
         for(;j<fi;j++)
         {
+
+               if(countf[j]>=1)
+            {
+                continue;
+
+            }
+
+
             if(strstr(filestring[i],function_name[j])!=NULL)
             {
                 char news[100];
@@ -123,6 +144,7 @@ int called(int name)
         return 99;
     }
 }
+
 void find_loop(int starting)
 {
      int i=starting;
@@ -323,30 +345,31 @@ void function_parameter(int number)
 void find_returntype(int starting)
 {
     char type[20];
+    char ch[100];
+    strcpy(ch,filestring[starting]);
     char c[100];
-    strcpy(c,filestring[starting]);
-    if(strstr(c, intf) != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
-    {
-        strcpy(type,"int");
 
+    for(int i=0;;i++)
+    {
+
+        if(ch[i]=='(')
+        {
+            ch[i]=='\0';
+            break;
+        }
     }
-    else if(strstr(c, "*int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+    strcpy(c,ch);
+
+     if(strstr(c, "*int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
         strcpy(type,"*int");
 
-    }
-    else if(strstr(c, charf) != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
-    {
-        strcpy(type,"char");
     }
     else if(strstr(c, "*char") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
         strcpy(type,"char");
     }
-    else if(strstr(c, doublef) != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
-    {
-        strcpy(type,"double");
-    }
+
     else if(strstr(c, "*double") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
         strcpy(type,"double");
@@ -363,29 +386,39 @@ void find_returntype(int starting)
     {
         strcpy(type,"short int");
     }
-    else if(strstr(c, "long int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+
+    else if(strstr(c, "unsigned long long int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
-        strcpy(type,"long int");
-    }
-    else if(strstr(c, "long long int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
-    {
-        strcpy(type,"long long int");
-    }
-    else if(strstr(c, "unsigned int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
-    {
-        strcpy(type,"unsigned int");
+        strcpy(type,"unsigned long long int");
     }
     else if(strstr(c, "unsigned long int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
         strcpy(type,"unsigned long int");
     }
-    else if(strstr(c, "unsigned long long int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+    else if(strstr(c, "unsigned int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
-        strcpy(type,"unsigned long long int");
+        strcpy(type,"unsigned int");
+    }
+    else if(strstr(c, "long long int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+    {
+        strcpy(type,"long long int");
+    }
+    else if(strstr(c, "long int") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+    {
+        strcpy(type,"long int");
+    }
+    else if(strstr(c, intf) != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+    {
+        strcpy(type,"int");
+
     }
     else if(strstr(c, "long double") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
         strcpy(type,"long double");
+    }
+    else if(strstr(c, doublef) != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+    {
+        strcpy(type,"double");
     }
     else if(strstr(c, "unsigned char") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
@@ -395,8 +428,11 @@ void find_returntype(int starting)
     {
         strcpy(type,"signed char");
     }
-
-    printf("\n%s",type);
+    else if(strstr(c, charf) != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+    {
+        strcpy(type,"char");
+    }
+    printf("\nReturn type = %s",type);
 
 }
 void findvariable(int iterator)
@@ -672,350 +708,7 @@ void findvariable(int iterator)
     printf("\n\n");
 
     }
-       else if(strstr(c, "long int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
-        {
-            int ci=0,cc=0,cd=0,cf=0;
-            int k=0,kc=0,kd=0,kf=0;
-            int i=0,end=0;
-            menu[iterator]=1;
-      char check[100];
-      strcpy(check,c);
-      removeSpaces(check);
-      strcpy(vname,"");
 
-      if(check[0]=='l'&&check[1]=='o'&&check[2]=='n')
-      {
-      for(i=0;;i++)
-       {
-           if(c[i]=='l'&&c[i+1]=='o'&&c[i+2]=='n'&&c[i+3]=='g')
-           {
-               i=i+8;
-               break;
-           }
-       }
-            for(i=i+1;;i++)
-       {
-           if(c[i]==' ')
-            continue;
-
-           if(c[i]==';')
-           {
-             break;
-           }
-
-           if(c[i]==',')
-           {
-               vname[k]='/';
-               k++;
-               ci++;
-               continue;
-           }
-           if(c[i]=='=')
-           {
-               for(;;i++)
-               {
-                   if(c[i]==',')
-                   {
-                       vname[k]='/';
-                        k++;
-                        ci++;
-                        i++;
-                        break;
-
-                   }
-                   if(c[i]==';')
-                     {
-                      end = 1;
-                      i--;
-                      break;
-                     }
-               }
-           }
-
-             if(end==1)
-             {
-                 end=0;
-                 break;
-             }
-           vname[k]= c[i];
-           k++;
-       }
-       vname[k]='/';
-       k++;
-       ci=ci+1;
-      }
-      printf("\nDeclaration of long integer variables = ");
-    for(int i=0;i<k-1;i++)
-    {
-        if(vname[i]=='/')
-        {
-            printf(" , ");
-            continue;
-        }
-        printf("%c",vname[i]);
-    }
-
-    printf("\n\n");
-
-    }
-       else if(strstr(c, "long long int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
-        {
-            int ci=0,cc=0,cd=0,cf=0;
-            int k=0,kc=0,kd=0,kf=0;
-            int i=0,end=0;
-            menu[iterator]=1;
-      char check[100];
-      strcpy(check,c);
-      removeSpaces(check);
-      strcpy(vname,"");
-
-      if(check[0]=='l'&&check[1]=='o'&&check[2]=='n')
-      {
-      for(i=0;;i++)
-       {
-           if(c[i]=='l'&&c[i+1]=='o'&&c[i+2]=='n'&&c[i+3]=='g')
-           {
-               i=i+13;
-               break;
-           }
-       }
-            for(i=i+1;;i++)
-       {
-           if(c[i]==' ')
-            continue;
-
-           if(c[i]==';')
-           {
-             break;
-           }
-
-           if(c[i]==',')
-           {
-               vname[k]='/';
-               k++;
-               ci++;
-               continue;
-           }
-           if(c[i]=='=')
-           {
-               for(;;i++)
-               {
-                   if(c[i]==',')
-                   {
-                       vname[k]='/';
-                        k++;
-                        ci++;
-                        i++;
-                        break;
-
-                   }
-                   if(c[i]==';')
-                     {
-                      end = 1;
-                      i--;
-                      break;
-                     }
-               }
-           }
-
-             if(end==1)
-             {
-                 end=0;
-                 break;
-             }
-           vname[k]= c[i];
-           k++;
-       }
-       vname[k]='/';
-       k++;
-       ci=ci+1;
-      }
-      printf("\nDeclaration of long long integer variables = ");
-    for(int i=0;i<k-1;i++)
-    {
-        if(vname[i]=='/')
-        {
-            printf(" , ");
-            continue;
-        }
-        printf("%c",vname[i]);
-    }
-
-    printf("\n\n");
-
-    }
-      else if(strstr(c, "unsigned int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
-        {
-            int ci=0,cc=0,cd=0,cf=0;
-            int k=0,kc=0,kd=0,kf=0;
-            int i=0,end=0;
-            menu[iterator]=1;
-      char check[100];
-      strcpy(check,c);
-      removeSpaces(check);
-      strcpy(vname,"");
-
-      if(check[0]=='u'&&check[1]=='n'&&check[2]=='s')
-      {
-      for(i=0;;i++)
-       {
-           if(c[i]=='u'&&c[i+1]=='n'&&c[i+2]=='s'&&c[i+3]=='i')
-           {
-               i=i+12;
-               break;
-           }
-       }
-            for(i=i+1;;i++)
-       {
-           if(c[i]==' ')
-            continue;
-
-           if(c[i]==';')
-           {
-             break;
-           }
-
-           if(c[i]==',')
-           {
-               vname[k]='/';
-               k++;
-               ci++;
-               continue;
-           }
-           if(c[i]=='=')
-           {
-               for(;;i++)
-               {
-                   if(c[i]==',')
-                   {
-                       vname[k]='/';
-                        k++;
-                        ci++;
-                        i++;
-                        break;
-
-                   }
-                   if(c[i]==';')
-                     {
-                      end = 1;
-                      i--;
-                      break;
-                     }
-               }
-           }
-
-             if(end==1)
-             {
-                 end=0;
-                 break;
-             }
-           vname[k]= c[i];
-           k++;
-       }
-       vname[k]='/';
-       k++;
-       ci=ci+1;
-      }
-      printf("\nDeclaration of Unsigned integer variables = ");
-    for(int i=0;i<k-1;i++)
-    {
-        if(vname[i]=='/')
-        {
-            printf(" , ");
-            continue;
-        }
-        printf("%c",vname[i]);
-    }
-
-    printf("\n\n");
-
-    }
-       else if(strstr(c, "unsigned long int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
-        {
-            int ci=0,cc=0,cd=0,cf=0;
-            int k=0,kc=0,kd=0,kf=0;
-            int i=0,end=0;
-            menu[iterator]=1;
-      char check[100];
-      strcpy(check,c);
-      removeSpaces(check);
-      strcpy(vname,"");
-
-      if(check[0]=='u'&&check[1]=='n'&&check[2]=='s')
-      {
-      for(i=0;;i++)
-       {
-           if(c[i]=='u'&&c[i+1]=='n'&&c[i+2]=='s'&&c[i+3]=='i')
-           {
-               i=i+17;
-               break;
-           }
-       }
-            for(i=i+1;;i++)
-       {
-           if(c[i]==' ')
-            continue;
-
-           if(c[i]==';')
-           {
-             break;
-           }
-
-           if(c[i]==',')
-           {
-               vname[k]='/';
-               k++;
-               ci++;
-               continue;
-           }
-           if(c[i]=='=')
-           {
-               for(;;i++)
-               {
-                   if(c[i]==',')
-                   {
-                       vname[k]='/';
-                        k++;
-                        ci++;
-                        i++;
-                        break;
-
-                   }
-                   if(c[i]==';')
-                     {
-                      end = 1;
-                      i--;
-                      break;
-                     }
-               }
-           }
-
-             if(end==1)
-             {
-                 end=0;
-                 break;
-             }
-           vname[k]= c[i];
-           k++;
-       }
-       vname[k]='/';
-       k++;
-       ci=ci+1;
-      }
-      printf("\nDeclaration of Unsigned long integer variables = ");
-    for(int i=0;i<k-1;i++)
-    {
-        if(vname[i]=='/')
-        {
-            printf(" , ");
-            continue;
-        }
-        printf("%c",vname[i]);
-    }
-
-    printf("\n\n");
-
-    }
         else if(strstr(c, "unsigned long long int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
         {
             int ci=0,cc=0,cd=0,cf=0;
@@ -1102,7 +795,351 @@ void findvariable(int iterator)
     printf("\n\n");
 
     }
+    else if(strstr(c, "unsigned long int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
+        {
+            int ci=0,cc=0,cd=0,cf=0;
+            int k=0,kc=0,kd=0,kf=0;
+            int i=0,end=0;
+            menu[iterator]=1;
+      char check[100];
+      strcpy(check,c);
+      removeSpaces(check);
+      strcpy(vname,"");
 
+      if(check[0]=='u'&&check[1]=='n'&&check[2]=='s')
+      {
+      for(i=0;;i++)
+       {
+           if(c[i]=='u'&&c[i+1]=='n'&&c[i+2]=='s'&&c[i+3]=='i')
+           {
+               i=i+17;
+               break;
+           }
+       }
+            for(i=i+1;;i++)
+       {
+           if(c[i]==' ')
+            continue;
+
+           if(c[i]==';')
+           {
+             break;
+           }
+
+           if(c[i]==',')
+           {
+               vname[k]='/';
+               k++;
+               ci++;
+               continue;
+           }
+           if(c[i]=='=')
+           {
+               for(;;i++)
+               {
+                   if(c[i]==',')
+                   {
+                       vname[k]='/';
+                        k++;
+                        ci++;
+                        i++;
+                        break;
+
+                   }
+                   if(c[i]==';')
+                     {
+                      end = 1;
+                      i--;
+                      break;
+                     }
+               }
+           }
+
+             if(end==1)
+             {
+                 end=0;
+                 break;
+             }
+           vname[k]= c[i];
+           k++;
+       }
+       vname[k]='/';
+       k++;
+       ci=ci+1;
+      }
+      printf("\nDeclaration of Unsigned long integer variables = ");
+    for(int i=0;i<k-1;i++)
+    {
+        if(vname[i]=='/')
+        {
+            printf(" , ");
+            continue;
+        }
+        printf("%c",vname[i]);
+    }
+
+    printf("\n\n");
+
+    }
+    else if(strstr(c, "unsigned int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
+        {
+            int ci=0,cc=0,cd=0,cf=0;
+            int k=0,kc=0,kd=0,kf=0;
+            int i=0,end=0;
+            menu[iterator]=1;
+      char check[100];
+      strcpy(check,c);
+      removeSpaces(check);
+      strcpy(vname,"");
+
+      if(check[0]=='u'&&check[1]=='n'&&check[2]=='s')
+      {
+      for(i=0;;i++)
+       {
+           if(c[i]=='u'&&c[i+1]=='n'&&c[i+2]=='s'&&c[i+3]=='i')
+           {
+               i=i+12;
+               break;
+           }
+       }
+            for(i=i+1;;i++)
+       {
+           if(c[i]==' ')
+            continue;
+
+           if(c[i]==';')
+           {
+             break;
+           }
+
+           if(c[i]==',')
+           {
+               vname[k]='/';
+               k++;
+               ci++;
+               continue;
+           }
+           if(c[i]=='=')
+           {
+               for(;;i++)
+               {
+                   if(c[i]==',')
+                   {
+                       vname[k]='/';
+                        k++;
+                        ci++;
+                        i++;
+                        break;
+
+                   }
+                   if(c[i]==';')
+                     {
+                      end = 1;
+                      i--;
+                      break;
+                     }
+               }
+           }
+
+             if(end==1)
+             {
+                 end=0;
+                 break;
+             }
+           vname[k]= c[i];
+           k++;
+       }
+       vname[k]='/';
+       k++;
+       ci=ci+1;
+      }
+      printf("\nDeclaration of Unsigned integer variables = ");
+    for(int i=0;i<k-1;i++)
+    {
+        if(vname[i]=='/')
+        {
+            printf(" , ");
+            continue;
+        }
+        printf("%c",vname[i]);
+    }
+
+    printf("\n\n");
+
+    }
+    else if(strstr(c, "long long int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
+        {
+            int ci=0,cc=0,cd=0,cf=0;
+            int k=0,kc=0,kd=0,kf=0;
+            int i=0,end=0;
+            menu[iterator]=1;
+      char check[100];
+      strcpy(check,c);
+      removeSpaces(check);
+      strcpy(vname,"");
+
+      if(check[0]=='l'&&check[1]=='o'&&check[2]=='n')
+      {
+      for(i=0;;i++)
+       {
+           if(c[i]=='l'&&c[i+1]=='o'&&c[i+2]=='n'&&c[i+3]=='g')
+           {
+               i=i+13;
+               break;
+           }
+       }
+            for(i=i+1;;i++)
+       {
+           if(c[i]==' ')
+            continue;
+
+           if(c[i]==';')
+           {
+             break;
+           }
+
+           if(c[i]==',')
+           {
+               vname[k]='/';
+               k++;
+               ci++;
+               continue;
+           }
+           if(c[i]=='=')
+           {
+               for(;;i++)
+               {
+                   if(c[i]==',')
+                   {
+                       vname[k]='/';
+                        k++;
+                        ci++;
+                        i++;
+                        break;
+
+                   }
+                   if(c[i]==';')
+                     {
+                      end = 1;
+                      i--;
+                      break;
+                     }
+               }
+           }
+
+             if(end==1)
+             {
+                 end=0;
+                 break;
+             }
+           vname[k]= c[i];
+           k++;
+       }
+       vname[k]='/';
+       k++;
+       ci=ci+1;
+      }
+      printf("\nDeclaration of long long integer variables = ");
+    for(int i=0;i<k-1;i++)
+    {
+        if(vname[i]=='/')
+        {
+            printf(" , ");
+            continue;
+        }
+        printf("%c",vname[i]);
+    }
+
+    printf("\n\n");
+
+    }
+
+    else if(strstr(c, "long int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
+        {
+            int ci=0,cc=0,cd=0,cf=0;
+            int k=0,kc=0,kd=0,kf=0;
+            int i=0,end=0;
+            menu[iterator]=1;
+      char check[100];
+      strcpy(check,c);
+      removeSpaces(check);
+      strcpy(vname,"");
+
+      if(check[0]=='l'&&check[1]=='o'&&check[2]=='n')
+      {
+      for(i=0;;i++)
+       {
+           if(c[i]=='l'&&c[i+1]=='o'&&c[i+2]=='n'&&c[i+3]=='g')
+           {
+               i=i+8;
+               break;
+           }
+       }
+            for(i=i+1;;i++)
+       {
+           if(c[i]==' ')
+            continue;
+
+           if(c[i]==';')
+           {
+             break;
+           }
+
+           if(c[i]==',')
+           {
+               vname[k]='/';
+               k++;
+               ci++;
+               continue;
+           }
+           if(c[i]=='=')
+           {
+               for(;;i++)
+               {
+                   if(c[i]==',')
+                   {
+                       vname[k]='/';
+                        k++;
+                        ci++;
+                        i++;
+                        break;
+
+                   }
+                   if(c[i]==';')
+                     {
+                      end = 1;
+                      i--;
+                      break;
+                     }
+               }
+           }
+
+             if(end==1)
+             {
+                 end=0;
+                 break;
+             }
+           vname[k]= c[i];
+           k++;
+       }
+       vname[k]='/';
+       k++;
+       ci=ci+1;
+      }
+      printf("\nDeclaration of long integer variables = ");
+    for(int i=0;i<k-1;i++)
+    {
+        if(vname[i]=='/')
+        {
+            printf(" , ");
+            continue;
+        }
+        printf("%c",vname[i]);
+    }
+
+    printf("\n\n");
+
+    }
         else if(strstr(c, "short int") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
         {
             int ci=0,cc=0,cd=0,cf=0;
@@ -1542,7 +1579,7 @@ int findstart(char name[100])
           char check[100];
           strcpy(check,c);
           removeSpaces(check);
-          if((check[0]=='i'&&check[1]=='n'&&check[2]=='t')||(check[0]=='v'&&check[1]=='o'&&check[2]=='i'&&check[3]=='d')||(check[0]=='d'&&check[1]=='o'&&check[2]=='u'&&check[3]=='b')||(check[0]=='*')||(check[0]=='c'&&check[1]=='h'&&check[2]=='a')||(check[0]=='l'&&check[1]=='o'&&check[2]=='n')||(check[0]=='u'&&check[1]=='n'))
+          if((check[0]=='i'&&check[1]=='n'&&check[2]=='t')||(check[0]=='v'&&check[1]=='o'&&check[2]=='i'&&check[3]=='d')||(check[0]=='d'&&check[1]=='o'&&check[2]=='u'&&check[3]=='b')||(check[0]=='*')||(check[0]=='c'&&check[1]=='h'&&check[2]=='a')||(check[0]=='l'&&check[1]=='o'&&check[2]=='n')||(check[0]=='u'&&check[1]=='n')||(check[0]=='s'&&check[1]=='h'))
           {
               if(strstr(c,name)!=NULL)
               {
@@ -1612,7 +1649,7 @@ int findfunction()
           char check[100];
           strcpy(check,c);
           removeSpaces(check);
-          if((check[0]=='i'&&check[1]=='n'&&check[2]=='t')||(check[0]=='v'&&check[1]=='o'&&check[2]=='i'&&check[3]=='d')||(check[0]=='d'&&check[1]=='o'&&check[2]=='u'&&check[3]=='b')||(check[0]=='*')||(check[0]=='c'&&check[1]=='h'&&check[2]=='a')||(check[0]=='l'&&check[1]=='o'&&check[2]=='n')||(check[0]=='u'&&check[1]=='n'))
+          if((check[0]=='i'&&check[1]=='n'&&check[2]=='t')||(check[0]=='v'&&check[1]=='o'&&check[2]=='i')||(check[0]=='d'&&check[1]=='o'&&check[2]=='u'&&check[3]=='b')||(check[0]=='*')||(check[0]=='c'&&check[1]=='h')||(check[0]=='l'&&check[1]=='o'&&check[2]=='n')||(check[0]=='u'&&check[1]=='n')||(check[0]=='s'&&check[1]=='h'))
           {
           for(i=0;;i++)
        {
@@ -1682,7 +1719,6 @@ int main()
        countf[i]=0;
    }
    function_menu("main");
-
 
 }
 
