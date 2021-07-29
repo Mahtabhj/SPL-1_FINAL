@@ -18,8 +18,8 @@ typedef struct{
       char *bracket2 = ")";
 int line = 0,fi=0;
 int countf[100];
-int menu[100];
-char filestring[100][100];
+int menu[1000];
+char filestring[2000][2000];
 char function_name[100][100];
 int findfunction();
 void findvariable();
@@ -44,7 +44,7 @@ void removecomment(char *str)
             str[i]='\0';
             break;
         }
-        else if(strstr(str,"printf")!=NULL||strstr(str,"scanf")!=NULL)
+        else if((strstr(str,"printf")!=NULL||strstr(str,"scanf")!=NULL)&&strstr(str,";")!=NULL)
         {
             str[i]='\0';
         }
@@ -65,7 +65,7 @@ void function_menu(char name[100])
 {
     int s=findstart(name);
     int end=findend(name,s);
-
+    printf("%d   %d",s,end);
     function_parameter(s);
     find_returntype(s);
     for(int i=s+1;i<end;i++)
@@ -116,7 +116,7 @@ int called(int name)
 
             if(strstr(filestring[i],function_name[j])!=NULL)
             {
-                char news[100];
+                char news[1000];
                 removeSpaces(filestring[i]);
                 strcpy(news,function_name[j]);
                 strcat(news,"(");
@@ -153,15 +153,19 @@ void find_loop(int starting)
     int count =0;
 
 
-      if(strstr(filestring[i], "else if")!=NULL&& strstr(filestring[i], "(")!=NULL && strstr(filestring[i], ")")!=NULL&& strstr(filestring[i], ";")==NULL)
+      if(strstr(filestring[i], "else if")!=NULL&& strstr(filestring[i], "(")!=NULL && strstr(filestring[i], ")")!=NULL&& (strstr(filestring[i], "{")!=NULL||strstr(filestring[i+1], "{")!=NULL))
       {
           menu[i]=2;
+          int k;
           printf("\nelse if condition : ");
           for(int j=0;;j++)
           {
-              if(filestring[i][j]=='(')
+             if(filestring[i][j]=='(')
               {
-                  int k=j;
+                   k=j;
+                  break;
+              }
+          }
                   for(;;k++)
                   {
                       if(filestring[i][k]=='\0')
@@ -170,27 +174,27 @@ void find_loop(int starting)
                       }
                       printf("%c",filestring[i][k]);
                   }
-              }
-              else if(filestring[i][j]=='\0')
-              {
-                  break;
-              }
 
-          }
+
+
            printf("\n");
       }
       else if(strstr(filestring[i], "for")!=NULL&& strstr(filestring[i], "(")!=NULL && strstr(filestring[i], ")")!=NULL&& strstr(filestring[i], ";")!=NULL)
       {
           menu[i]=2;
+          int k;
           removeSpaces(filestring[i]);
           if(filestring[i][0]=='f'&&filestring[i][1]=='o'&&filestring[i][2]=='r')
           {
           printf("\nfor condition : ");
           for(int j=0;;j++)
           {
-              if(filestring[i][j]=='(')
+             if(filestring[i][j]=='(')
               {
-                  int k=j;
+                   k=j;
+                  break;
+              }
+          }
                   for(;;k++)
                   {
                       if(filestring[i][k]=='\0')
@@ -199,30 +203,32 @@ void find_loop(int starting)
                       }
                       printf("%c",filestring[i][k]);
                   }
-              }
-              else if(filestring[i][j]=='\0')
-              {
-                  break;
-              }
 
-          }
+
+
            printf("\n");
           }
       }
-      else if(strstr(filestring[i], "if")!=NULL&& strstr(filestring[i], "(")!=NULL && strstr(filestring[i], ")")!=NULL&& strstr(filestring[i], ";")==NULL)
+      else if(strstr(filestring[i], "if")!=NULL&& strstr(filestring[i], "(")!=NULL && strstr(filestring[i], ")")!=NULL&& (strstr(filestring[i], "{")!=NULL||strstr(filestring[i+1], "{")!=NULL))
       {
-          char c[100];
+          char c[1000];
+
           strcpy(c,filestring[i]);
           removeSpaces(c);
+
           if(strstr(c,"elseif"))
           {
           menu[i]=2;
+          int k;
           printf("\nelse if condition : ");
           for(int j=0;;j++)
           {
-              if(filestring[i][j]=='(')
+             if(filestring[i][j]=='(')
               {
-                  int k=j;
+                   k=j;
+                  break;
+              }
+          }
                   for(;;k++)
                   {
                       if(filestring[i][k]=='\0')
@@ -231,26 +237,24 @@ void find_loop(int starting)
                       }
                       printf("%c",filestring[i][k]);
                   }
-              }
-              else if(filestring[i][j]=='\0')
-              {
-                  break;
+                  printf("\n");
               }
 
-          }
-           printf("\n");
-      }
       else
       {
 
 
           menu[i]=2;
+          int k;
           printf("\nif condition : ");
           for(int j=0;;j++)
           {
-              if(filestring[i][j]=='(')
+             if(filestring[i][j]=='(')
               {
-                  int k=j;
+                   k=j;
+                  break;
+              }
+          }
                   for(;;k++)
                   {
                       if(filestring[i][k]=='\0')
@@ -259,20 +263,19 @@ void find_loop(int starting)
                       }
                       printf("%c",filestring[i][k]);
                   }
-              }
-              else if(filestring[i][j]=='\0')
-              {
-                  break;
-              }
 
-          }
+
+
            printf("\n");
       }
-      }
-      else if(strstr(filestring[i], "while")!=NULL&& strstr(filestring[i], "(")!=NULL && strstr(filestring[i], ")")!=NULL)
+}
+
+
+      else if(strstr(filestring[i], "while")!=NULL&& strstr(filestring[i], "(")!=NULL && (strstr(filestring[i], "{")!=NULL||strstr(filestring[i+1], "{")!=NULL))
       {
           menu[i]=2;
-          char news[100];
+          int k=0;
+          char news[1000];
                 strcpy(news,"while");
                 strcat(news,"(");
                 if(strstr(filestring[i],news)!=NULL)
@@ -282,7 +285,10 @@ void find_loop(int starting)
           {
              if(filestring[i][j]=='(')
               {
-                  int k=j;
+                   k=j;
+                  break;
+              }
+          }
                   for(;;k++)
                   {
                       if(filestring[i][k]=='\0')
@@ -292,60 +298,49 @@ void find_loop(int starting)
                       printf("%c",filestring[i][k]);
                   }
               }
-              else if(filestring[i][j]=='\0')
-              {
-                  break;
-              }
 
-          }
+
            printf("\n");
-                }
-
       }
+
+
 
 }
 void function_parameter(int number)
 {
 
-           char c[100];
+           char c[1000];
            char intp[100][100];
            int int_count=0,j=0;
            int i=0;
            strcpy(c,filestring[number]);
 
           menu[i]=2;
+          int k=0;
           printf("\nParameters : ");
+
           for(int j=0;;j++)
           {
               if(filestring[number][j]=='(')
               {
-                  int k=j;
-                  for(;;k++)
+                   k=j+1;
+                  break;
+              }
+          }
+                  for(;k<100;k++)
                   {
-                      if(filestring[number][k]=='\0')
-                      {
-                          break;
-                      }
                       if(filestring[number][k]=='('||filestring[number][k]==')')
                       {
                           continue;
                       }
                       printf("%c",filestring[number][k]);
                   }
-              }
-              else if(filestring[i][j]=='\0')
-              {
-                  break;
-              }
-
-          }
-           printf("\n");
-
+             printf("\n");
 }
 void find_returntype(int starting)
 {
-    char type[20];
-    char ch[100];
+    char type[200];
+    char ch[1000];
     strcpy(ch,filestring[starting]);
     char c[100];
 
@@ -365,6 +360,11 @@ void find_returntype(int starting)
         strcpy(type,"*int");
 
     }
+    else if(strstr(c, "void") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
+    {
+        strcpy(type,"void");
+    }
+
     else if(strstr(c, "*char") != NULL&& strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
     {
         strcpy(type,"char");
@@ -439,11 +439,11 @@ void findvariable(int iterator)
 {
 
    char ch,str[1000];
-   char c[100];
-   char *v1="int";
-   char *v2 = "char";
-   char *v3 = "double";
-   char *v4 = "float";
+   char c[1000];
+   char *v1="int ";
+   char *v2 = "char ";
+   char *v3 = "double ";
+   char *v4 = "float ";
    char *v=";";
    char *vp ="(";
 
@@ -715,7 +715,7 @@ void findvariable(int iterator)
             int k=0,kc=0,kd=0,kf=0;
             int i=0,end=0;
             menu[iterator]=1;
-      char check[100];
+      char check[1000];
       strcpy(check,c);
       removeSpaces(check);
       strcpy(vname,"");
@@ -973,7 +973,7 @@ void findvariable(int iterator)
             int k=0,kc=0,kd=0,kf=0;
             int i=0,end=0;
             menu[iterator]=1;
-      char check[100];
+      char check[1000];
       strcpy(check,c);
       removeSpaces(check);
       strcpy(vname,"");
@@ -1146,7 +1146,7 @@ void findvariable(int iterator)
             int k=0,kc=0,kd=0,kf=0;
             int i=0,end=0;
             menu[iterator]=1;
-      char check[100];
+      char check[1000];
       strcpy(check,c);
       removeSpaces(check);
       strcpy(vname,"");
@@ -1231,7 +1231,7 @@ void findvariable(int iterator)
             int k=0,kc=0,kd=0,kf=0;
             int i=0,end=0;
             menu[iterator]=1;
-      char check[100];
+      char check[1000];
       strcpy(check,c);
       removeSpaces(check);
       if(check[0]=='i'&&check[1]=='n'&&check[2]=='t')
@@ -1315,7 +1315,7 @@ void findvariable(int iterator)
             int k=0,kc=0,kd=0,kf=0;
             int i=0,end=0;
             menu[iterator]=1;
-      char check[100];
+      char check[1000];
       strcpy(check,c);
       removeSpaces(check);
       strcpy(vname,"");
@@ -1400,7 +1400,7 @@ void findvariable(int iterator)
             int k=0,kc=0,kd=0,kf=0;
             int i=0,end=0;
             menu[iterator]=1;
-      char check[100];
+      char check[1000];
       strcpy(check,c);
       removeSpaces(check);
       strcpy(vname,"");
@@ -1486,7 +1486,7 @@ void findvariable(int iterator)
          int k=0,kc=0,kd=0,kf=0;
          int i=0,end=0;
         menu[iterator]=1;
-        char check[100];
+        char check[1000];
       strcpy(check,c);
       removeSpaces(check);
       if(check[0]=='c'&&check[1]=='h'&&check[2]=='a')
@@ -1570,13 +1570,13 @@ int findstart(char name[100])
 {
 
     int i=0,start=0;
-    char c[100];
+    char c[1000];
     for(i=0;;i++)
     {
         strcpy(c,filestring[i]);
         if( strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
       {
-          char check[100];
+          char check[1000];
           strcpy(check,c);
           removeSpaces(check);
           if((check[0]=='i'&&check[1]=='n'&&check[2]=='t')||(check[0]=='v'&&check[1]=='o'&&check[2]=='i'&&check[3]=='d')||(check[0]=='d'&&check[1]=='o'&&check[2]=='u'&&check[3]=='b')||(check[0]=='*')||(check[0]=='c'&&check[1]=='h'&&check[2]=='a')||(check[0]=='l'&&check[1]=='o'&&check[2]=='n')||(check[0]=='u'&&check[1]=='n')||(check[0]=='s'&&check[1]=='h'))
@@ -1587,7 +1587,8 @@ int findstart(char name[100])
                   break;
               }
 
-      }}
+      }
+      }
 
     }
     return start;
@@ -1595,39 +1596,38 @@ int findstart(char name[100])
 
 int findend(char name[100], int start)
 {
-    int i=0,end=0;
+    int i=0,end=0,j=0;
     char *bri="{";
     char *brf="}";
     int count =0;
-    for(i=start;i<line;i++)
+    for(i=start+2;i<line;i++)
     {
-
-      if(strstr(filestring[i], "{")!=NULL&& strstr(filestring[i], ";")==NULL && strstr(filestring[i], "(")==NULL)
+        char c[1000];
+        strcpy(c,filestring[i]);
+        if( strstr(c, ";")== NULL && strstr(c, "(")!= NULL&&strstr(c, ")")!=NULL)
       {
-          count++;
-
-      }
-      else if(strstr(filestring[i], "}")!=NULL&& strstr(filestring[i], ";")==NULL && strstr(filestring[i], "(")==NULL)
-      {
-          count--;
-          if(count==0)
+          char check[1000];
+          strcpy(check,c);
+          removeSpaces(check);
+          if((check[0]=='i'&&check[1]=='n'&&check[2]=='t')||(check[0]=='v'&&check[1]=='o'&&check[2]=='i')||(check[0]=='d'&&check[1]=='o'&&check[2]=='u'&&check[3]=='b')||(check[0]=='*')||(check[0]=='c'&&check[1]=='h')||(check[0]=='l'&&check[1]=='o'&&check[2]=='n')||(check[0]=='u'&&check[1]=='n')||(check[0]=='s'&&check[1]=='h'))
           {
-              end=i;
-
-              break ;
+             end=i-1;
+             break;
           }
-      }
-      else continue;
-
-
     }
+    }
+    if(end==0)
+    {
+        return line;
+    }
+    else
     return end;
 }
 
 int findfunction()
 {
       FILE *fptr;
-      char c[100];
+      char c[1000];
 
       fptr = fopen("i.txt","r");
       if(fptr == NULL)
@@ -1637,7 +1637,7 @@ int findfunction()
    }
 
      int i,k=0,si=0;
-     char intfunction[100];
+     char intfunction[1000];
       while(fgets(c, sizeof(c), fptr))
     {
         line++;
@@ -1646,7 +1646,7 @@ int findfunction()
         si++;
       if( strstr(c, semicolon)== NULL && strstr(c, bracket1)!= NULL&&strstr(c, bracket2)!=NULL)
       {
-          char check[100];
+          char check[1000];
           strcpy(check,c);
           removeSpaces(check);
           if((check[0]=='i'&&check[1]=='n'&&check[2]=='t')||(check[0]=='v'&&check[1]=='o'&&check[2]=='i')||(check[0]=='d'&&check[1]=='o'&&check[2]=='u'&&check[3]=='b')||(check[0]=='*')||(check[0]=='c'&&check[1]=='h')||(check[0]=='l'&&check[1]=='o'&&check[2]=='n')||(check[0]=='u'&&check[1]=='n')||(check[0]=='s'&&check[1]=='h'))
@@ -1712,6 +1712,7 @@ int findfunction()
 }
 int main()
 {
+
     findfunction();
     for(int i=0;i<100;i++)
    {
@@ -1721,4 +1722,6 @@ int main()
    function_menu("main");
 
 }
+
+
 
