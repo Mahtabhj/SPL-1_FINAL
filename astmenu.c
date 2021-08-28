@@ -44,11 +44,24 @@ void removecomment(char *str)
             str[i]='\0';
             break;
         }
-        else if((strstr(str,"printf")!=NULL||strstr(str,"scanf")!=NULL)&&strstr(str,";")!=NULL)
+        else if (str[i] == '/'&&str[i+1]=='*')
         {
             str[i]='\0';
+            break;
         }
+
     }
+    char check[1000];
+    strcpy(check,str);
+    removeSpaces(check);
+    if(check[0]=='*')
+    {
+        str[0]='\0';
+    }
+    else if((strstr(check,"printf(")!=NULL&&check[0]=='p')||(strstr(str,"scanf(")!=NULL&&check[0]=='s')&&strstr(str,";")!=NULL)
+        {
+            str[0]='\0';
+        }
 }
 void removeSpaces(char *str)
 {
@@ -65,7 +78,6 @@ void function_menu(char name[100])
 {
     int s=findstart(name);
     int end=findend(name,s);
-    printf("%d   %d",s,end);
     function_parameter(s);
     find_returntype(s);
     for(int i=s+1;i<end;i++)
@@ -101,7 +113,6 @@ int called(int name)
 {
     int i=name;
     int end = findend(name,i);
-    printf("\n");
     int f1=0;
         int j=0;
         for(;j<fi;j++)
@@ -125,7 +136,7 @@ int called(int name)
                 {
                     countf[j]=countf[j]+1;
                     f1=1;
-                    printf("Call function : %s\n",function_name[j]);
+                    printf("\nCall function : %s\n",function_name[j]);
                 }
                 menu[i]=3;
             }
@@ -329,6 +340,11 @@ void function_parameter(int number)
           }
                   for(;k<100;k++)
                   {
+                      if(filestring[number][k-1]=='('&&filestring[number][k]==')')
+                      {
+                          printf("No parameter");
+                          break;
+                      }
                       if(filestring[number][k]=='('||filestring[number][k]==')')
                       {
                           continue;
@@ -432,7 +448,7 @@ void find_returntype(int starting)
     {
         strcpy(type,"char");
     }
-    printf("\nReturn type = %s",type);
+    printf("\nReturn type = %s\n",type);
 
 }
 void findvariable(int iterator)
@@ -1394,7 +1410,90 @@ void findvariable(int iterator)
     printf("\n\n");
 
     }
-    else if(strstr(c, "float") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
+
+
+       else if(strstr(c, v2) != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
+        {
+         int ci=0,cc=0,cd=0,cf=0;
+         int k=0,kc=0,kd=0,kf=0;
+         int i=0,end=0;
+        menu[iterator]=1;
+        char check[1000];
+      strcpy(check,c);
+      removeSpaces(check);
+      if(check[0]=='c'&&check[1]=='h'&&check[2]=='a')
+      {
+      for(i=0;;i++)
+       {
+           if(c[i]=='c'&&c[i+1]=='h'&&c[i+2]=='a'&&c[i+3]=='r'&&c[i+4]==' ')
+           {
+               i=i+4;
+               break;
+           }
+       }
+            for(i=i+1;;i++)
+       {
+           if(c[i]==' ')
+            continue;
+
+           if(c[i]==';')
+           {
+             break;
+           }
+           if(c[i]==',')
+           {
+               vcname[kc]='/';
+               kc++;
+               cc++;
+               continue;
+           }
+           if(c[i]=='=')
+           {
+               for(;;i++)
+               {
+                   if(c[i]==',')
+                   {
+                       vcname[k]='/';
+                        kc++;
+                        cc++;
+                        i++;
+                        break;
+
+                   }
+                   if(c[i]==';')
+                     {
+                      end = 1;
+                      i--;
+                      break;
+                     }
+               }
+           }
+
+             if(end==1)
+             {
+                 end=0;
+                 break;
+             }
+           vcname[kc]= c[i];
+           kc++;
+       }
+       vcname[kc]='/';
+       kc++;
+       cc=cc+1;
+    }
+    printf("\nDeclaration of char variables = ");
+     for(int i=0;i<kc-1;i++)
+    {
+        if(vcname[i]=='/')
+        {
+            printf(" , ");
+            continue;
+        }
+        printf("%c",vcname[i]);
+    }
+   printf("\n");
+}
+else if(strstr(c, "float") != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
         {
             int ci=0,cc=0,cd=0,cf=0;
             int k=0,kc=0,kd=0,kf=0;
@@ -1480,87 +1579,6 @@ void findvariable(int iterator)
 
     }
 
-       else if(strstr(c, v2) != NULL&& strstr(c, v)!= NULL && strstr(c, vp)== NULL)
-        {
-         int ci=0,cc=0,cd=0,cf=0;
-         int k=0,kc=0,kd=0,kf=0;
-         int i=0,end=0;
-        menu[iterator]=1;
-        char check[1000];
-      strcpy(check,c);
-      removeSpaces(check);
-      if(check[0]=='c'&&check[1]=='h'&&check[2]=='a')
-      {
-      for(i=0;;i++)
-       {
-           if(c[i]=='c'&&c[i+1]=='h'&&c[i+2]=='a'&&c[i+3]=='r'&&c[i+4]==' ')
-           {
-               i=i+4;
-               break;
-           }
-       }
-            for(i=i+1;;i++)
-       {
-           if(c[i]==' ')
-            continue;
-
-           if(c[i]==';')
-           {
-             break;
-           }
-           if(c[i]==',')
-           {
-               vcname[kc]='/';
-               kc++;
-               cc++;
-               continue;
-           }
-           if(c[i]=='=')
-           {
-               for(;;i++)
-               {
-                   if(c[i]==',')
-                   {
-                       vcname[k]='/';
-                        kc++;
-                        cc++;
-                        i++;
-                        break;
-
-                   }
-                   if(c[i]==';')
-                     {
-                      end = 1;
-                      i--;
-                      break;
-                     }
-               }
-           }
-
-             if(end==1)
-             {
-                 end=0;
-                 break;
-             }
-           vcname[kc]= c[i];
-           kc++;
-       }
-       vcname[kc]='/';
-       kc++;
-       cc=cc+1;
-    }
-    printf("\nDeclaration of char variables = ");
-     for(int i=0;i<kc-1;i++)
-    {
-        if(vcname[i]=='/')
-        {
-            printf(" , ");
-            continue;
-        }
-        printf("%c",vcname[i]);
-    }
-   printf("\n");
-}
 
 
 
@@ -1692,7 +1710,6 @@ int findfunction()
       }
     }
     fclose(fptr);
-    printf("Funtions are = ");
     int l=0;
     for(i=0;i<k;i++)
     {
@@ -1705,23 +1722,28 @@ int findfunction()
          function_name[fi][l]=intfunction[i];
          l++;
     }
-    for(i=0;i<fi;i++)
-    {
-        printf("%s ,",function_name[i]);
-    }
 }
 int main()
 {
 
     findfunction();
+
     for(int i=0;i<100;i++)
    {
        menu[i]=0;
        countf[i]=0;
    }
+    int k=1;
+    int l=findend(main,0)+1;
+    for(;k<l;k++)
+    {
+        findvariable(k);
+    }
+   printf(" \nmain \n");
    function_menu("main");
 
 }
+
 
 
 
